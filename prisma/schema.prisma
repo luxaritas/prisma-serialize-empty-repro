@@ -1,0 +1,28 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Node {
+  id Int @id @default(autoincrement())
+  value Int
+  
+  leftId Int?
+  left Node? @relation("left", fields: [leftId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  leftOf Node[] @relation("left")
+
+  rightId Int?
+  right Node? @relation("right", fields: [rightId], references: [id], onDelete: Restrict, onUpdate: Restrict)
+  rightOf Node[] @relation("right")
+
+  @@index([leftId])
+  @@index([rightId])
+}
